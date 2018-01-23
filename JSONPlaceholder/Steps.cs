@@ -25,9 +25,7 @@ namespace JSONPlaceholder
         {
             Post post = null;
 
-
-            post = await APIClient.GetPost("http://jsonplaceholder.typicode.com/posts/2");
-                APIClient.ShowPost(post);
+            post = await APIClient.GetPost("2");
 
             Console.ReadLine();
         }

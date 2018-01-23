@@ -17,11 +17,11 @@ namespace JSONPlaceholder
         }
         public static HttpClient client = new HttpClient();
 
-        public static void ShowPost(Post post)
-        {
-            Console.WriteLine($"userId: {post.UserId}\tid: " +
-                              $"{post.Id}\ttitle: {post.Title}\tbody: {post.Body}");
-        }
+        //public static void ShowPost(Post post)
+        //{
+        //    Console.WriteLine($"userId: {post.UserId}\tid: " +
+        //                      $"{post.Id}\ttitle: {post.Title}\tbody: {post.Body}");
+        //}
 
         public static async Task<Uri> CreatePosts(Post post)
         {
@@ -32,10 +32,11 @@ namespace JSONPlaceholder
             return response.Headers.Location;
         }
 
-        public static async Task<Post> GetPost(string path)
+        public static async Task<Post> GetPost(string id)
         {
+            Run();
             Post post = null;
-            HttpResponseMessage response = await client.GetAsync(path);
+            HttpResponseMessage response = await client.GetAsync($"/posts/{id}");
             if (response.IsSuccessStatusCode)
             {
                 post = await response.Content.ReadAsAsync<Post>();
@@ -56,7 +57,7 @@ namespace JSONPlaceholder
        public static async Task<HttpStatusCode> DeletePost(int id)
         {
             HttpResponseMessage response = await client.DeleteAsync(
-                $"api/products/{id}");
+                $"/post/{id}");
             return response.StatusCode;
         }
     }
