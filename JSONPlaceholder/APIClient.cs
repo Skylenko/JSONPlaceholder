@@ -1,53 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace JSONPlaceholder
 {
     class APIClient
     {
-        public static void Main()
-        {
-        }
+        public static void Main() { }
+
         public static HttpClient client = new HttpClient();
 
-        public static async Task<Uri> CreatePosts(Post post)
+        public static void Put()
+        {
+            client.BaseAddress = new Uri("http://jsonplaceholder.typicode.com/");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/json"));
+        }
+
+        public static async Task<HttpResponseMessage> CreatePosts(Post post)
         {
             HttpResponseMessage response = await client.PostAsJsonAsync("/posts", post);
-            response.EnsureSuccessStatusCode();
-
-            return response.Headers.Location;
+            return response;
         }
 
-        public static async Task<List<Post>> GetAllPosts()
+        public static async Task<HttpResponseMessage> GetAllPosts()
         {
             HttpResponseMessage response = await client.GetAsync($"/posts");
-            List<Post> posts = await response.Content.ReadAsAsync<List<Post>>();
-
-            return posts;
+            return response;
         }
 
-        public static async Task<Post> GetPost(string id)
+        public static async Task<HttpResponseMessage> GetPost(string id)
         {
-            Post post = null;
             HttpResponseMessage response = await client.GetAsync($"/posts/{id}");
-            if (response.IsSuccessStatusCode)
-            {
-                post = await response.Content.ReadAsAsync<Post>();
-            }
-
-            return post;
+            return response;
         }
 
-        public static async Task<Post> UpdatePost(Post post)
+        public static async Task<HttpResponseMessage> UpdatePost(Post post)
         {
-            HttpResponseMessage response = await client.PutAsJsonAsync(
-                $"/posts/{post.Id}", post);
-            //    response.EnsureSuccessStatusCode();
-
-            post = await response.Content.ReadAsAsync<Post>();
-            return post;
+            HttpResponseMessage response = await client.PutAsJsonAsync($"/posts/{post.Id}", post);
+            return response;
         }
 
         public static async Task<HttpResponseMessage> DeletePost(int id)

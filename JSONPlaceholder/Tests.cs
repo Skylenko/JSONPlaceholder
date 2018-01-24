@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -9,27 +10,32 @@ namespace JSONPlaceholder
     [TestFixture]
     public class Tests
     {
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
-            APIClient.client.BaseAddress = new Uri("http://jsonplaceholder.typicode.com/");
-            APIClient.client.DefaultRequestHeaders.Accept.Clear();
-            APIClient.client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json"));
+            APIClient.Put();
         }
 
-        [TearDown]
-        public void TearDown()
+        [Test]
+        public async Task CreateNewDataInPost()
         {
-            APIClient.client.DefaultRequestHeaders.Accept.Clear();
+            string path = APIClient.client.BaseAddress + "posts/" + "101";
+
+            Post post = new Post(999, 101, "new title", "same text");
+            HttpResponseMessage responseMessage = await APIClient.CreatePosts(post);
+
+            Assert.AreEqual(responseMessage.Headers.Location, path);
+            Assert.AreEqual((int)(responseMessage.StatusCode), 201);
         }
 
         [Test]
         public async Task GetDataFromPost()
         {
-            Post post = await APIClient.GetPost("2");
+            HttpResponseMessage responseMessage = await APIClient.GetPost("2");
+            Post post = await responseMessage.Content.ReadAsAsync<Post>();
 
-            Assert.IsNotNull(post);
+            Assert.IsNotNull(responseMessage);
+            Assert.AreEqual((int)(responseMessage.StatusCode), 200);
             Assert.IsNotEmpty(post.Body);
             Assert.AreEqual(post.Title, "qui est esse");
         }
@@ -38,10 +44,13 @@ namespace JSONPlaceholder
         public async Task GetAllDataFromPost()
         {
             int numberOfPosts = 100;
-            List <Post> posts = await APIClient.GetAllPosts();
+
+            HttpResponseMessage responseMessage = await APIClient.GetAllPosts();
+            List<Post> posts = await responseMessage.Content.ReadAsAsync<List<Post>>();
 
             Assert.IsNotNull(posts);
             Assert.AreEqual(numberOfPosts, posts.Count);
+            Assert.AreEqual((int)(responseMessage.StatusCode), 200);
         }
     }
 }

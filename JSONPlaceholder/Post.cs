@@ -10,7 +10,7 @@ namespace JSONPlaceholder
 
         public int UserId { get; set; }
 
-        public int Id { get; set; }
+        public int Id { get; }
 
         public string Title { get; set; }
 
@@ -22,10 +22,6 @@ namespace JSONPlaceholder
             Id = id;
             Title = title;
             Body = body;
-        }
-
-        public Post()
-        {
         }
     }
 }
