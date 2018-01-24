@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
-
 
 namespace JSONPlaceholder
 {
@@ -21,13 +18,20 @@ namespace JSONPlaceholder
                     new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            APIClient.client.DefaultRequestHeaders.Accept.Clear();
+        }
+
         [Test]
         public async Task GetDataFromPost()
         {
             Post post = await APIClient.GetPost("2");
+
             Assert.IsNotNull(post);
-            // Assert.IsNotEmpty(post.Body);
-            // Assert.AreEqual(post.Title, "qui est esse");
+            Assert.IsNotEmpty(post.Body);
+            Assert.AreEqual(post.Title, "qui est esse");
         }
 
         [Test]
@@ -35,7 +39,8 @@ namespace JSONPlaceholder
         {
             int numberOfPosts = 100;
             List <Post> posts = await APIClient.GetAllPosts();
-           // Assert.IsNotNull(posts);
+
+            Assert.IsNotNull(posts);
             Assert.AreEqual(numberOfPosts, posts.Count);
         }
     }
