@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -16,23 +14,20 @@ namespace JSONPlaceholder
             APIClient.Put();
         }
 
-        [Test]
-        public async Task CreateNewDataInPost()
-        {
-            string path = APIClient.client.BaseAddress + "posts/" + "101";
+        //[Test]
+        //public async Task CreateNewDataInPost()
+        //{
+        //    CreatePostModel post = new CreatePostModel(999, 101, "new title", "same text");
+        //    HttpResponseMessage responseMessage = await APIClient.CreatePosts(post);
 
-            Post post = new Post(999, 101, "new title", "same text");
-            HttpResponseMessage responseMessage = await APIClient.CreatePosts(post);
-
-            Assert.AreEqual(responseMessage.Headers.Location, path);
-            Assert.AreEqual((int)(responseMessage.StatusCode), 201);
-        }
+        //    Assert.AreEqual((int)(responseMessage.StatusCode), 200);
+        //}
 
         [Test]
         public async Task GetDataFromPost()
         {
             HttpResponseMessage responseMessage = await APIClient.GetPost("2");
-            Post post = await responseMessage.Content.ReadAsAsync<Post>();
+            CreatePostModel post = await responseMessage.Content.ReadAsAsync<CreatePostModel>();
 
             Assert.IsNotNull(responseMessage);
             Assert.AreEqual((int)(responseMessage.StatusCode), 200);
@@ -46,7 +41,7 @@ namespace JSONPlaceholder
             int numberOfPosts = 100;
 
             HttpResponseMessage responseMessage = await APIClient.GetAllPosts();
-            List<Post> posts = await responseMessage.Content.ReadAsAsync<List<Post>>();
+            List<CreatePostModel> posts = await responseMessage.Content.ReadAsAsync<List<CreatePostModel>>();
 
             Assert.IsNotNull(posts);
             Assert.AreEqual(numberOfPosts, posts.Count);
