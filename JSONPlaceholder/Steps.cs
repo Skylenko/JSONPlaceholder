@@ -21,11 +21,22 @@ namespace JSONPlaceholder
             Console.ReadLine();
         }
 
-        static async Task GetPosts()
+        static async Task GetPost()
         {
             Post post = null;
 
             post = await APIClient.GetPost("2");
+            APIClient.ShowPost(post);
+
+            Console.ReadLine();
+        }
+
+        static async Task GetPosts()
+        {
+            Post post = null;
+
+            post = await APIClient.GetPosts();
+            APIClient.ShowPost(post);
 
             Console.ReadLine();
         }

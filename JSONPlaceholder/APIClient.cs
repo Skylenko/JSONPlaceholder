@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -8,20 +11,22 @@ namespace JSONPlaceholder
 {
     class APIClient
     {
-        static void Run()
+        public static HttpClient client = new HttpClient();
+
+        public static async Task RunAsync()
         {
             client.BaseAddress = new Uri("http://jsonplaceholder.typicode.com/");
             client.DefaultRequestHeaders.Accept.Clear();
-            APIClient.client.DefaultRequestHeaders.Accept.Add(
+            client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue("application/json"));
-        }
-        public static HttpClient client = new HttpClient();
 
-        //public static void ShowPost(Post post)
-        //{
-        //    Console.WriteLine($"userId: {post.UserId}\tid: " +
-        //                      $"{post.Id}\ttitle: {post.Title}\tbody: {post.Body}");
-        //}
+        }
+
+        public static void ShowPost(Post post)
+        {
+            Console.WriteLine($"userId: {post.UserId}\tid: " +
+                              $"{post.Id}\ttitle: {post.Title}\tbody: {post.Body}");
+        }
 
         public static async Task<Uri> CreatePosts(Post post)
         {
@@ -32,9 +37,24 @@ namespace JSONPlaceholder
             return response.Headers.Location;
         }
 
+
+        public static async Task<Post> GetPosts()
+        {
+            await RunAsync();
+
+            Post post = null;
+            HttpResponseMessage response = await client.GetAsync($"/posts");
+            if (response.IsSuccessStatusCode)
+            {
+                List<Post> posts = await JsonConvert.DeserializeObjectAsync<List<Post>>(IList);
+            }
+            return post;
+        }
+
         public static async Task<Post> GetPost(string id)
         {
-            Run();
+            await RunAsync();
+
             Post post = null;
             HttpResponseMessage response = await client.GetAsync($"/posts/{id}");
             if (response.IsSuccessStatusCode)
