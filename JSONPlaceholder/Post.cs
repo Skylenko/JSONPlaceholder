@@ -6,6 +6,8 @@ namespace JSONPlaceholder
 {
     public class Post
     {
+        internal List<Post> Posts;
+
         public int UserId { get; set; }
 
         public int Id { get; set; }
@@ -20,6 +22,10 @@ namespace JSONPlaceholder
             Id = id;
             Title = title;
             Body = body;
+        }
+
+        public Post()
+        {
         }
     }
 }
