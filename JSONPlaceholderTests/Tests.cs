@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using NUnit.Framework;
 using JSONPlaceholderAPIClient;
+using NUnit.Framework;
 
-namespace JSONPlaceholder
+namespace JSONPlaceholderTests
 {
     [TestFixture]
     public class Tests
@@ -12,7 +13,7 @@ namespace JSONPlaceholder
         [OneTimeSetUp]
         public void SetUp()
         {
-           APIClient.Put();
+           ApiClient.Put();
         }
 
         [Test]
@@ -20,9 +21,9 @@ namespace JSONPlaceholder
         {
             CreatePostModel post = new CreatePostModel(999, "new title", "same text");
 
-            HttpResponseMessage responseMessage = await APIClient.CreatePosts(post);
+            HttpResponseMessage responseMessage = await ApiClient.CreatePosts(post);
 
-            Assert.AreEqual((int)(responseMessage.StatusCode), 201);
+            Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.OK);
         }
 
         [Test]
@@ -30,82 +31,82 @@ namespace JSONPlaceholder
         {
             CreatePostModel post = new CreatePostModel(999, "new title", "same text");
 
-            HttpResponseMessage responseMessage = await APIClient.CreatePosts(post);
+            HttpResponseMessage responseMessage = await ApiClient.CreatePosts(post);
             FullPostModel fullPost = await responseMessage.Content.ReadAsAsync<FullPostModel>();
 
             Assert.IsNotEmpty(fullPost.ToString());
         }
 
         [Test]
-        public async Task GetPost_ShouldHaveNotNullPost()
+        public async Task GetPost_ShouldHaveNotNullPost_UsingExistId()
         {
-            HttpResponseMessage responseMessage = await APIClient.GetPost("1");
+            HttpResponseMessage responseMessage = await ApiClient.GetPost("1");
             FullPostModel post = await responseMessage.Content.ReadAsAsync<FullPostModel>();
 
             Assert.IsNotNull(post);
         }
 
         [Test]
-        public async Task GetPost_ShouldHaveSuccessfullCode()
+        public async Task GetPost_ShouldHaveSuccessfullCode_UsingExistId()
         {
-            HttpResponseMessage responseMessage = await APIClient.GetPost("10");
+            HttpResponseMessage responseMessage = await ApiClient.GetPost("10");
 
-            Assert.AreEqual((int)(responseMessage.StatusCode), 200);
+            Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.OK);
         }
 
         [Test]
-        public async Task GetPost_ShouldHaveNoSuccessfulCode_ByNoExistId()
+        public async Task GetPost_ShouldHaveNoSuccessfulCode_UsingNoExistId()
         {
-            HttpResponseMessage responseMessage = await APIClient.GetPost("0");
+            HttpResponseMessage responseMessage = await ApiClient.GetPost("0");
 
-            Assert.AreEqual((int)(responseMessage.StatusCode), 404);
+            Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.NotFound);
         }
 
         [Test]
-        public async Task GetPost_ShouldHaveNotEmptyBody()
+        public async Task GetPost_ShouldHaveNotEmptyBody_UsingExistId()
         {
-            HttpResponseMessage responseMessage = await APIClient.GetPost("4");
+            HttpResponseMessage responseMessage = await ApiClient.GetPost("4");
             FullPostModel post = await responseMessage.Content.ReadAsAsync<FullPostModel>();
 
             Assert.IsNotEmpty(post.Body);
         }
 
         [Test]
-        public async Task GetPost_ShouldHaveSomeTitle()
+        public async Task GetPost_ShouldHaveSomeTitle_UsingExistId()
         {
             string title = "qui est esse";
-            HttpResponseMessage responseMessage = await APIClient.GetPost("2");
+            HttpResponseMessage responseMessage = await ApiClient.GetPost("2");
             FullPostModel post = await responseMessage.Content.ReadAsAsync<FullPostModel>();
 
             Assert.AreEqual(post.Title, title);
         }
 
         [Test]
-        public async Task GetAllPosts_ShouldBeNotNullPosts()
+        public async Task GetAllPosts_ShouldBeNotNullPosts_PostsExist()
         {
-            HttpResponseMessage responseMessage = await APIClient.GetAllPosts();
+            HttpResponseMessage responseMessage = await ApiClient.GetAllPosts();
             List<FullPostModel> posts = await responseMessage.Content.ReadAsAsync<List<FullPostModel>>();
 
             Assert.IsNotNull(posts);
         }
 
         [Test]
-        public async Task GetAllPosts_ShouldBeEqualsNumberOfPosts()
+        public async Task GetAllPosts_ShouldBeEqualsNumberOfPosts_PostsExist()
         {
             int numberOfPosts = 100;
 
-            HttpResponseMessage responseMessage = await APIClient.GetAllPosts();
+            HttpResponseMessage responseMessage = await ApiClient.GetAllPosts();
             List<FullPostModel> posts = await responseMessage.Content.ReadAsAsync<List<FullPostModel>>();
 
             Assert.AreEqual(numberOfPosts, posts.Count);
         }
 
         [Test]
-        public async Task GetAllPosts_ShouldHasSuccessfulCode()
+        public async Task GetAllPosts_ShouldHasSuccessfulCode_PostsExist()
         {
-            HttpResponseMessage responseMessage = await APIClient.GetAllPosts();
+            HttpResponseMessage responseMessage = await ApiClient.GetAllPosts();
 
-            Assert.AreEqual((int)(responseMessage.StatusCode), 200);
+            Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.OK);
         }
 
         [Test]
@@ -113,7 +114,7 @@ namespace JSONPlaceholder
         {
             FullPostModel post = new FullPostModel(10, 5, "123", "789");
 
-            HttpResponseMessage responseMessage = await APIClient.UpdatePost(post);
+            HttpResponseMessage responseMessage = await ApiClient.UpdatePost(post);
             FullPostModel fullPost = await responseMessage.Content.ReadAsAsync<FullPostModel>();
 
             Assert.IsNotEmpty(fullPost.ToString());
@@ -124,9 +125,9 @@ namespace JSONPlaceholder
         {
             FullPostModel post = new FullPostModel(10, 5, "123", "789");
 
-            HttpResponseMessage responseMessage = await APIClient.UpdatePost(post);
+            HttpResponseMessage responseMessage = await ApiClient.UpdatePost(post);
 
-            Assert.AreEqual((int)(responseMessage.StatusCode), 201);
+            Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.OK);
         }
 
         [Test]
@@ -136,7 +137,7 @@ namespace JSONPlaceholder
 
             string newBody = post.Body;
 
-            HttpResponseMessage responseMessage = await APIClient.UpdatePost(post);
+            HttpResponseMessage responseMessage = await ApiClient.UpdatePost(post);
             FullPostModel fullPost = await responseMessage.Content.ReadAsAsync<FullPostModel>();
 
             Assert.AreEqual(newBody, fullPost.Body);
@@ -145,23 +146,23 @@ namespace JSONPlaceholder
         [Test]
         public async Task DeletePost_ShoudReturnSuccessfulCode()
         {
-            HttpResponseMessage responseMessage = await APIClient.DeletePost(8);
+            HttpResponseMessage responseMessage = await ApiClient.DeletePost(8);
 
-            Assert.AreEqual((int)(responseMessage.StatusCode), 204);
+            Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.OK);
         }
 
         [Test]
         public async Task DeletePost_ShoudReturnNoSuccessfulCode_ByUsingNoExistId()
         {
-            HttpResponseMessage responseMessage = await APIClient.DeletePost(10000);
+            HttpResponseMessage responseMessage = await ApiClient.DeletePost(10000);
 
-            Assert.AreEqual((int)(responseMessage.StatusCode), 404);
+            Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.NotFound);
         }
 
         [Test]
         public async Task DeletePost_ShoudReturnNullDeletedPost()
         {
-            HttpResponseMessage responseMessage = await APIClient.DeletePost(8);
+            HttpResponseMessage responseMessage = await ApiClient.DeletePost(8);
             FullPostModel fullPost = await responseMessage.Content.ReadAsAsync<FullPostModel>();
 
             Assert.IsNull(fullPost);
