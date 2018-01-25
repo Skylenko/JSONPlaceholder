@@ -7,8 +7,6 @@ namespace JSONPlaceholderAPIClient
 {
    public class APIClient
     {
-        public static void Main() { }
-
         public static HttpClient client = new HttpClient();
 
         public static void Put()

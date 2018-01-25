@@ -159,7 +159,7 @@ namespace JSONPlaceholder
         }
 
         [Test]
-        public async Task DeletePost_ShoudNotReturnDeletedPost()
+        public async Task DeletePost_ShoudReturnNullDeletedPost()
         {
             HttpResponseMessage responseMessage = await APIClient.DeletePost(8);
             FullPostModel fullPost = await responseMessage.Content.ReadAsAsync<FullPostModel>();
