@@ -1,6 +1,6 @@
 ﻿namespace JSONPlaceholderAPIClient
 {
-    public class CreatePostModel
+    public class FullPostModel
     {
         public int UserId { get; set; }
 
@@ -10,7 +10,7 @@
 
         public string Body { get; set; }
 
-        public CreatePostModel(int userId, int id, string title, string body)
+        public FullPostModel(int userId, int id, string title, string body)
         {
             UserId = userId;
             Id = id;
@@ -19,7 +19,7 @@
         }
     }
 
-    public class UpdatePostModel
+    public class CreatePostModel
     {
         public int UserId { get; set; }
 
@@ -27,7 +27,7 @@
 
         public string Body { get; set; }
 
-        public UpdatePostModel(int userId, int id, string title, string body)
+        public CreatePostModel(int userId, string title, string body)
         {
             UserId = userId;
             Title = title;

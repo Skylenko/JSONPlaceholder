@@ -8,7 +8,7 @@ namespace JSONPlaceholderAPIClient
 {
     public class ResponseContainer<T>
     {
-        public CreatePostModel DeserealizedContent { get; set; }
-        public CreatePostModel StatusCode { get; set; }
+        public FullPostModel DeserealizedContent { get; set; }
+        public FullPostModel StatusCode { get; set; }
     }
 }

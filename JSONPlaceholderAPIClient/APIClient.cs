@@ -19,11 +19,11 @@ namespace JSONPlaceholderAPIClient
                     new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        //public static async Task<ResponseContainer<CreatePostModel>> CreatePosts(CreatePostModel post)
-        //{
-        //    HttpResponseMessage response = await client.PostAsJsonAsync("/posts", post);
-        //    return response;
-        //}
+        public static async Task<HttpResponseMessage> CreatePosts(CreatePostModel post)
+        {
+            HttpResponseMessage response = await client.PostAsJsonAsync("/posts", post);
+            return response;
+        }
 
         public static async Task<HttpResponseMessage> GetAllPosts()
         {
@@ -37,7 +37,7 @@ namespace JSONPlaceholderAPIClient
             return response;
         }
 
-        public static async Task<HttpResponseMessage> UpdatePost(CreatePostModel post)
+        public static async Task<HttpResponseMessage> UpdatePost(FullPostModel post)
         {
             HttpResponseMessage response = await client.PutAsJsonAsync($"/posts/{post.Id}", post);
             return response;
