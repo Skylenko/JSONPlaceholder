@@ -11,7 +11,7 @@ namespace JSONPlaceholderAPIClient
     {
         public static HttpClient Client = new HttpClient();
 
-        public void Put()
+        static ApiClient()
         {
             Client.BaseAddress = new Uri("http://jsonplaceholder.typicode.com/");
             Client.DefaultRequestHeaders.Accept.Clear();
