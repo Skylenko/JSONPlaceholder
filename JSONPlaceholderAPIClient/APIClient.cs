@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Net;
+using JSONPlaceholderAPIClient.PostModels;
 
 namespace JSONPlaceholderAPIClient
 {
@@ -11,7 +11,7 @@ namespace JSONPlaceholderAPIClient
     {
         public static HttpClient Client = new HttpClient();
 
-        public static void Put()
+        public void Put()
         {
             Client.BaseAddress = new Uri("http://jsonplaceholder.typicode.com/");
             Client.DefaultRequestHeaders.Accept.Clear();
@@ -22,7 +22,6 @@ namespace JSONPlaceholderAPIClient
         public static async Task<ResponseContainer<FullPostModel>> CreatePosts(CreatePostModel post)
         {
             HttpResponseMessage response = await Client.PostAsJsonAsync("/posts", post);
-
             ResponseContainer<FullPostModel> responseContainer = new ResponseContainer<FullPostModel>(response);
 
             return responseContainer;
@@ -31,25 +30,22 @@ namespace JSONPlaceholderAPIClient
         public static async Task<ResponseContainer<List<FullPostModel>>> GetAllPosts()
         {
             HttpResponseMessage response = await Client.GetAsync("/posts");
-
             var resultResponseContainer = new ResponseContainer<List<FullPostModel>>(response);
 
             return resultResponseContainer;
         }
 
-        public static async Task<ResponseContainer<FullPostModel>> GetPost(string id)
+        public static async Task<ResponseContainer<FullPostModel>> GetPost(int id)
         {
             HttpResponseMessage response = await Client.GetAsync($"/posts/{id}");
-
             var resultResponseContainer = new ResponseContainer<FullPostModel>(response);
 
             return resultResponseContainer;
         }
 
-        public static async Task<ResponseContainer<FullPostModel>> UpdatePost(FullPostModel post)
+        public static async Task<ResponseContainer<FullPostModel>> UpdatePost(int id, UpdatepostModel post)
         {
-            HttpResponseMessage response = await Client.PutAsJsonAsync($"/posts/{post.Id}", post);
-
+            HttpResponseMessage response = await Client.PutAsJsonAsync($"/posts/{id}", post);
             var resultResponseContainer = new ResponseContainer<FullPostModel>(response);
 
             return resultResponseContainer;
@@ -58,9 +54,8 @@ namespace JSONPlaceholderAPIClient
         public static async Task<ResponseContainer<FullPostModel>> DeletePost(int id)
         {
             HttpResponseMessage response = await Client.DeleteAsync($"/post/{id}");
-
             var resultResponseContainer = new ResponseContainer<FullPostModel>(response);
-           
+
             return resultResponseContainer;
         }
     }
