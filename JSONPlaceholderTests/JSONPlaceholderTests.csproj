@@ -52,8 +52,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiTests\GetPostsTests.cs" />
+    <Compile Include="ApiTests\DeletePostTests.cs" />
+    <Compile Include="ApiTests\GetPostTests.cs" />
+    <Compile Include="ApiTests\UpdatePostTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tests.cs" />
+    <Compile Include="ApiTests\CreatePostTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
